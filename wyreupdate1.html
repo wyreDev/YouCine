@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WyreDev - Video Sharing Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: #ff4500;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 2rem;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #333;
+            border-radius: 24px 0 0 24px;
+            background-color: #121212;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            padding: 0.7rem 1.5rem;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 0 24px 24px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: #444;
+        }
+        
+        .weedme {
+            padding: 0.7rem 1.5rem;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .weedme:hover {
+            background-color: #e03d00;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 240px;
+            background-color: #1a1a1a;
+            padding: 5rem 0 2rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 90;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-section {
+            padding: 1rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .sidebar-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.7rem 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #333;
+        }
+        
+        .sidebar-item.active {
+            background-color: #333;
+            border-left: 3px solid #ff4500;
+        }
+        
+        .sidebar-item i {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .container {
+            flex: 1;
+            margin-left: 240px;
+            padding: 6rem 2rem 2rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+            color: #ff4500;
+        }
+        
+        /* Video Grid - 5 videos per row */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .video-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .thumbnails {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-info {
+            padding: 1rem;
+        }
+        
+        .video-title {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+        
+        .video-author {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .video-description {
+            color: #777;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .video-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+        }
+        
+        .btn {
+            padding: 0.3rem 0.6rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background-color 0.3s;
+            flex: 1;
+        }
+        
+        .btn:hover {
+            background-color: #444;
+        }
+        
+        .btn-download {
+            background-color: #0066cc;
+        }
+        
+        .btn-download:hover {
+            background-color: #0055aa;
+        }
+        
+        /* Memes/Shorts Section */
+        .shorts-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            scrollbar-width: thin;
+            scrollbar-color: #555 #1a1a1a;
+        }
+        
+        .shorts-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .shorts-container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+        
+        .shorts-container::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        
+        .short-card {
+            flex: 0 0 180px;
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .short-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .short-thumbnail {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+        
+        .short-info {
+            padding: 0.7rem;
+        }
+        
+        .short-title {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .short-views {
+            color: #777;
+            font-size: 0.8rem;
+        }
+        
+        /* Footer */
+        .contact-info {
+            background-color: #1a1a1a;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #333;
+            margin-left: 240px;
+        }
+        
+        .contact-text {
+            color: #aaa;
+        }
+        
+        .contact-highlight {
+            color: #ff4500;
+            font-weight: 600;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #ff4500;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1600px) {
+            .videos-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 1400px) {
+            .videos-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .videos-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .container {
+                margin-left: 200px;
+            }
+            
+            .contact-info {
+                margin-left: 200px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .container {
+                margin-left: 0;
+            }
+            
+            .contact-info {
+                margin-left: 0;
+            }
+            
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .search-container {
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 110;
+                background: #333;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .container {
+                padding: 5rem 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Header with search functionality -->
+    <header>
+        <div class="logo">
+            <h1>Wyre<span>Dev</span></h1>
+        </div>
+        
+        <div class="search-container">
+            <input class="search-box" type="text" placeholder="Search videos, music, movies..." list="categories">
+            <datalist id="categories">
+                <option value="music">Music</option>
+                <option value="videos">Videos</option>
+                <option value="movies">Movies</option>
+                <option value="animation">Animation</option>
+            </datalist>
+            <button class="search-btn">Search</button>
+        </div>
+        
+        <div class="account-actions">
+            <button class="weedme">
+                Upload Video
+            </button>
+        </div>
+    </header>
+    
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <a href="#" class="sidebar-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-fire"></i>
+                <span>Trending</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-play-circle"></i>
+                <span>Subscriptions</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">Library</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-clock"></i>
+                <span>Watch Later</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-thumbs-up"></i>
+                <span>Liked Videos</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-list"></i>
+                <span>Playlists</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">Explore</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-film"></i>
+                <span>Movies & Shows</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-gamepad"></i>
+                <span>Gaming</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-music"></i>
+                <span>Music</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-grin-squint-tears"></i>
+                <span>Memes</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">Subscriptions</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-user-circle"></i>
+                <span>WyreDev</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Music Channel</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Tech Reviews</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Gaming World</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Movie Trailers</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Memes/Shorts Section -->
+        <h2 class="section-title">
+            <i class="fas fa-grin-squint-tears"></i>
+            Memes (Shorts)
+        </h2>
+        
+        <div class="shorts-container">
+            <div class="short-card">
+                <video class="short-thumbnail" controls poster="https://placehold.co/180x320/333/white?text=Funny+Meme">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                </video>
+                <div class="short-info">
+                    <h3 class="short-title">Cats being weird</h3>
+                    <p class="short-views">1.2M views</p>
+                </div>
+            </div>
+            <div class="short-card">
+                <video class="short-thumbnail" controls poster="https://placehold.co/180x320/333/white?text=Trending+Meme">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                </video>
+                <div class="short-info">
+                    <h3 class="short-title">Latest viral trend</h3>
+                    <p class="short-views">850K views</p>
+                </div>
+            </div>
+            <div class="short-card">
+                <video class="short-thumbnail" controls poster="https://placehold.co/180x320/333/white?text=Gaming+Meme">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                </video>
+                <div class="short-info">
+                    <h3 class="short-title">Gamer moments</h3>
+                    <p class="short-views">540K views</p>
+                </div>
+            </div>
+            <div class="short-card">
+                <video class="short-thumbnail" controls poster="https://placehold.co/180x320/333/white?text=Anime+Meme">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                </video>
+                <div class="short-info">
+                    <h3 class="short-title">Anime references</h3>
+                    <p class="short-views">720K views</p>
+                </div>
+            </div>
+            <div class="short-card">
+                <video class="short-thumbnail" controls poster="https://placehold.co/180x320/333/white?text=Daily+Meme">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
+                </video>
+                <div class="short-info">
+                    <h3 class="short-title">Relatable content</h3>
+                    <p class="short-views">950K views</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Videos Section -->
+        <h2 class="section-title">
+            <i class="fas fa-star"></i>
+            Featured Videos
+        </h2>
+        
+        <div class="videos-grid" id="featuredVideos">
+            <!-- Videos will be loaded here dynamically -->
+        </div>
+        
+        <!-- History Section -->
+        <h2 class="section-title">
+            <i class="fas fa-history"></i>
+            Watch History
+        </h2>
+        
+        <div class="videos-grid" id="historyVideos">
+            <!-- History videos will be loaded here dynamically -->
+        </div>
+        
+        <!-- Playlists Section -->
+        <h2 class="section-title">
+            <i class="fas fa-list"></i>
+            continue listening
+        </h2>
+        
+        <div class="videos-grid" id="playlistVideos">
+            <!-- Playlist videos will be loaded here dynamically -->
+        </div>
+        
+        <!-- Subscriptions Section -->
+        <h2 class="section-title">
+            <i class="fas fa-play-circle"></i>
+            Subscriptions
+        </h2>
+        
+        <div class="videos-grid" id="subscriptionVideos">
+            <!-- Subscription videos will be loaded here dynamically -->
+        </div>
+    </div>
+    
+    <!-- Footer with contact information -->
+    <footer class="contact-info">
+        <p class="contact-text">Input correct music video/movie/series title at <span class="contact-highlight">wyre-0726547799</span> or email <span class="contact-highlight">contact@wyredev.com</span></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                });
+            }
+            
+            // Sample video data with working video URLs
+            const videoData = [
+                {
+                    title: "Wednesday sn2_Netflix-Original series",
+                    author: "wyreDev",
+                    views: "100 views · 5hrs ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Wednesday+Trailer",
+                    videoSrc: "andons/Wednesday__Season_2___Official_Trailer___Netflix(720p).mp4"
+                },
+                {
+                    title: "Peacemaker sn2_Netflix-Original series",
+                    author: "wyreDev",
+                    views: "150 views · 4hrs ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Peacemaker+Trailer",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Wu-Tang Feat Redman, Inspectah Deck - Lesson Learn's",
+                    author: "wyreDev",
+                    views: "500 views · 9hrs ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Wu-Tang+Music+Video",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Method Man & Redman - Heavy ft. 50 Cent",
+                    author: "wyreDev",
+                    views: "490 views · 2hrs ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Method+Man+Video",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "DJ wyre - #fresh-street_vibes Best of Future 2025 Trap Mix",
+                    author: "wyreDev",
+                    views: "278 views · 50mins ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Future+Mix",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Wu-Tang Clan - Winter Warz #onlyGod-can_judge-me",
+                    author: "wyreDev",
+                    views: "206 views · 4hrs ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Winter+Warz",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Future - Low Life (Official Music Video) ft. The Weeknd",
+                    author: "wyreDev",
+                    views: "86 views · 10mins ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Future+Low+Life",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Chris Brown - Under the Influence (Official Video)",
+                    author: "wyreDev",
+                    views: "305 views · 6 days ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Chris+Brown",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Sample Video 9 - Amazing Content",
+                    author: "wyreDev",
+                    views: "450 views · 1 day ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Sample+9",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                },
+                {
+                    title: "Sample Video 10 - Epic Moments",
+                    author: "wyreDev",
+                    views: "320 views · 2 days ago",
+                    thumbnail: "https://placehold.co/600x338/1a1a1a/white?text=Sample+10",
+                    videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                }
+            ];
+            
+            // Function to create video card HTML with ACTUAL VIDEO ELEMENTS
+            function createVideoCard(video, lazyLoad = true) {
+                return `
+                    <div class="video-card">
+                        <div class="thumbnail-container">
+                            <video class="thumbnails" controls preload="none" poster="${video.thumbnail}">
+                                <source src="${video.videoSrc}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <p class="video-author">${video.author}</p>
+                            <p class="video-description">${video.views}</p>
+                            <div class="video-actions">
+                                <button class="btn btn-download">Download</button>
+                                <button class="btn btn-watch">+ Watch later</button>
+                                <button class="btn btn-share">Share</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Function to load videos
+            function loadVideos(containerId, videos, count = 10) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                // Clear loading message if exists
+                container.innerHTML = '';
+                
+                // Add videos to container
+                for (let i = 0; i < Math.min(count, videos.length); i++) {
+                    container.innerHTML += createVideoCard(videos[i]);
+                }
+            }
+            
+            // Initialize the page with videos
+            loadVideos('featuredVideos', videoData, 10);
+            loadVideos('historyVideos', videoData.slice(0, 5), 5);
+            loadVideos('playlistVideos', videoData.slice(2, 7), 5);
+            loadVideos('subscriptionVideos', videoData.slice(5), 5);
+            
+            // Search functionality
+            const searchBtn = document.querySelector('.search-btn');
+            const searchBox = document.querySelector('.search-box');
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchBox.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const query = searchBox.value.trim();
+                if (query) {
+                    alert(`Searching for: ${query}`);
+                    loadVideos('featuredVideos', videoData, 10);
+                }
+            }
+            
+            // Video action buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-download')) {
+                    alert('Download feature would be implemented here');
+                } else if (e.target.classList.contains('btn-watch')) {
+                    e.target.textContent = e.target.textContent === '+ Watch later' ? '✓ Added' : '+ Watch later';
+                } else if (e.target.classList.contains('btn-share')) {
+                    alert('Share feature would be implemented here');
+                }
+            });
+            
+            // Sidebar navigation
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const sectionName = this.querySelector('span').textContent;
+                    alert(`Loading ${sectionName} section`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
