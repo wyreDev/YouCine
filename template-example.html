@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example Page Using Master Template</title>
+    <script src="master-template.js"></script>
+</head>
+<body>
+    <script>
+        // Example of how to use the master template
+        document.addEventListener('DOMContentLoaded', async function() {
+            await useMasterTemplate({
+                PAGE_TITLE: 'Example Page - YouCine',
+                PAGE_HEAD_CONTENT: '<meta name="description" content="Example page using master template">',
+                PAGE_CONTENT: `
+                    <h2 class="section-title">Welcome to the Master Template System</h2>
+                    <div class="videos-grid">
+                        <div class="video-card">
+                            <div class="video-info">
+                                <h3 class="video-title">Master Template Example</h3>
+                                <p class="video-author">wyreDev</p>
+                                <p class="video-description">This page uses the master template system</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                PAGE_SCRIPTS: '<script>console.log("Custom script for this page");</script>'
+            });
+        });
+    </script>
+</body>
+</html>

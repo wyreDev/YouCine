@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - YouCine</title>
+    <link rel="stylesheet" href="weed.css">
+</head>
+<body>
+    <div class="logpage">
+        <div class="login">
+            <h2>
+                <p class="hii">Upload Video Metadata</p>
+            </h2>
+            <p id="message"></p>
+            <div class="details">
+                <form id="uploadForm">
+                    <label for="title" class="username">Video Title:</label>
+                    <input class="inputa" type="text" id="title" required>
+
+                    <label for="author" class="username">Author:</label>
+                    <input class="inputa" type="text" id="author" required>
+
+                    <label for="description" class="username">Description:</label>
+                    <input class="inputa" type="text" id="description" required>
+
+                    <label for="src" class="username">Video Source Path:</label>
+                    <input class="inputa" type="text" id="src" required placeholder="andons/video-file.mp4">
+
+                    <label for="category" class="username">Category:</label>
+                    <input class="inputa" type="text" id="category" placeholder="music, series, movies">
+
+                    <input type="submit" value="Upload" class="log">
+                </form>
+            </div>
+            <div>
+                <button class="signup" onclick="window.location.href='wyreupdate.html'">Back to Platform</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const author = document.getElementById('author').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const src = document.getElementById('src').value.trim();
+            const category = document.getElementById('category').value.trim();
+            const message = document.getElementById('message');
+
+            try {
+                const response = await fetch('/api/videos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, author, description, src, category })
+                });
+
+                const result = await response.json();
+                message.textContent = result.message;
+                if (response.ok && result.success) {
+                    message.style.color = 'green';
+                    document.getElementById('uploadForm').reset();
+                } else {
+                    message.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                message.textContent = 'Unable to upload video metadata. Please try again later.';
+                message.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

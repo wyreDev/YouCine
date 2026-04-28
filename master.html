@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- PAGE_TITLE --></title>
+    <link rel="stylesheet" href="weed.css">
+    <link rel="stylesheet" href="adminlogin.css">
+    <!-- PAGE_HEAD_CONTENT -->
+</head>
+<body>
+    <!-- Header with search functionality -->
+    <header>
+        <div class="logo">
+            <h1>Mu<span>zify+</span></h1>
+        </div>
+
+        <div class="search-container">
+            <input class="search-box" type="text" placeholder="wyre-search" list="categories">
+            <datalist id="categories">
+                <option value="music">Music</option>
+                <option value="videos">Videos</option>
+                <option value="movies">Movies</option>
+                <option value="animation">Animation</option>
+            </datalist>
+            <button class="search-btn">Search</button>
+        </div>
+
+        <div class="account-actions">
+            <button class="weedme">
+                <<<<
+                ADMIN
+                >>>>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <!-- PAGE_CONTENT -->
+    </div>
+
+    <!-- Footer with contact information -->
+    <footer class="contact-info">
+        <p class="contact-text">Input correct music video/movie/series title at <span class="contact-highlight">wyre-0726547799</span> or email <span class="contact-highlight">contact@wyredev.com</span></p>
+    </footer>
+
+    <!-- PAGE_SCRIPTS -->
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBtn = document.querySelector('.search-btn');
+            const searchBox = document.querySelector('.search-box');
+            const videoCards = document.querySelectorAll('.video-card');
+
+            // Function to perform search
+            function performSearch() {
+                const query = searchBox.value.trim().toLowerCase();
+
+                if (query === '') {
+                    // Show all videos if search is empty
+                    videoCards.forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    return;
+                }
+
+                // Filter videos based on title
+                videoCards.forEach(card => {
+                    const title = card.querySelector('.video-title').textContent.toLowerCase();
+                    if (title.includes(query)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add event listeners
+            if (searchBtn) {
+                searchBtn.addEventListener('click', performSearch);
+            }
+            if (searchBox) {
+                searchBox.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // Video action buttons functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-download')) {
+                    alert('Download feature would be implemented here');
+                } else if (e.target.classList.contains('btn-watch')) {
+                    e.target.textContent = e.target.textContent === '+ Watch later' ? '✓ Added' : '+ Watch later';
+                } else if (e.target.classList.contains('btn-share')) {
+                    alert('Share feature would be implemented here');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+            <li>GitHub - Repository hosting and collaboration.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>Web Development</h2>
+        <ul>
+            <li>Node.js - For running JavaScript on the server and package management.</li>
+            <li>npm - Package manager for JavaScript libraries.</li>
+            <li>Browser Developer Tools (Chrome DevTools, Firefox DevTools) - For debugging and testing.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>C# Development</h2>
+        <ul>
+            <li>.NET SDK - For building and running C# applications.</li>
+            <li>Visual Studio (optional) - Full IDE for C# development.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>Web Server</h2>
+        <ul>
+            <li>Live Server Extension in VS Code - For local development server.</li>
+            <li>Apache or Nginx - For production deployment.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>Media Handling</h2>
+        <ul>
+            <li>FFmpeg - For video processing and conversion.</li>
+            <li>Video players like VLC - For testing video files.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>Deployment</h2>
+        <ul>
+            <li>GitHub Pages - For static site hosting.</li>
+            <li>Heroku, Vercel, or Netlify - For full-stack deployment.</li>
+        </ul>
+    </div>
+
+    <div class="tool-section">
+        <h2>Additional Tools</h2>
+        <ul>
+            <li>Postman - For API testing (if you add backend).</li>
+            <li>Database: SQLite or MongoDB - For storing user data/videos.</li>
+            <li>Security: HTTPS certificates, firewalls.</li>
+        </ul>
+    </div>
+</body>
+</html></content>
+<parameter name="filePath">/home/master/Desktop/#TECH MANIA/ssd/master.html

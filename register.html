@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - YouCine</title>
+    <link rel="stylesheet" href="weed.css">
+</head>
+<body>
+    <div class="logpage">
+        <div class="login">
+            <h2>
+                <p class="hii">Create Your Account</p>
+            </h2>
+            <p id="message"></p>
+            <div class="details">
+                <form id="registerForm">
+                    <label for="username" class="username">Username:</label>
+                    <input class="inputa" type="text" id="username" required>
+
+                    <label for="password" class="username">Password:</label>
+                    <input class="inputa" type="password" id="password" required>
+
+                    <input type="submit" value="Register" class="log">
+                </form>
+            </div>
+            <div>
+                <p class="flexend">Already have an account?</p>
+                <button class="signup" onclick="window.location.href='index.html'">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const message = document.getElementById('message');
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+                message.textContent = result.message;
+                if (response.ok && result.success) {
+                    message.style.color = 'green';
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    message.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                message.textContent = 'Unable to register. Please try again later.';
+                message.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

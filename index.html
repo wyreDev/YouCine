@@ -2,135 +2,7 @@
 <html>
 <head>
     <title>YouCine - Login</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background-color: #000;
-            color: #fff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .logpage {
-            background-color: #111;
-            border-radius: 10px;
-            padding: 40px;
-            width: 400px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-        
-        .hii {
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #e50914; /* Netflix red for accent */
-        }
-        
-        .join p {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #aaa;
-        }
-        
-        .details {
-            margin-bottom: 25px;
-        }
-        
-        .username {
-            display: block;
-            margin-bottom: 8px;
-            color: #ddd;
-        }
-        
-        .inputa {
-            width: 100%;
-            padding: 12px;
-            background-color: #222;
-            border: 1px solid #333;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 16px;
-        }
-        
-        .inputa:focus {
-            outline: none;
-            border-color: #e50914;
-        }
-        
-        .log {
-            width: 100%;
-            padding: 12px;
-            background-color: #e50914;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .log:hover {
-            background-color: #f40612;
-        }
-        
-        .flexend {
-            text-align: center;
-            margin: 20px 0;
-            color: #666;
-            position: relative;
-        }
-        
-        .flexend:before, .flexend:after {
-            content: "";
-            display: inline-block;
-            width: 30%;
-            height: 1px;
-            background: #333;
-            position: absolute;
-            top: 50%;
-        }
-        
-        .flexend:before {
-            left: 0;
-        }
-        
-        .flexend:after {
-            right: 0;
-        }
-        
-        .signup {
-            width: 100%;
-            padding: 12px;
-            background-color: transparent;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .signup:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: #666;
-        }
-        
-        #message {
-            color: #e50914;
-            text-align: center;
-            margin-bottom: 15px;
-            min-height: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="adminlogin.css">
 </head>
 <body>
     <div class="logpage">
@@ -146,7 +18,7 @@
             </div>
             
             <div class="details">
-                <form id="loginForm" onsubmit="return validateLogin()">
+                <form id="loginForm">
                     <label for="username" class="username">Username:</label>
                     <input class="inputa" type="text" id="username" required>
                     
@@ -163,29 +35,10 @@
             </div>
             
             <div>
-                <button class="signup">Sign Up</button>
+                <button class="signup" onclick="window.location.href='register.html'">Sign Up</button>
             </div>
         </div>
     </div>
     
-    <script>
-        function validateLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const message = document.getElementById('message');
-            
-            if (username === '' || password === '') {
-                message.textContent = 'Please fill in all fields';
-                return false;
-            }
-            
-            // Here you would typically validate with server
-            // For demo purposes, we'll just show a message
-            message.textContent = 'Logging in...';
-            
-            // Prevent form submission for this demo
-            return true;
-        }
-    </script>
 </body>
 </html>
